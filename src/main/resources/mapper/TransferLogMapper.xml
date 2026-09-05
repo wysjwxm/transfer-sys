@@ -11,4 +11,26 @@
                 #{amount}, #{currency}, #{status.code})
     </insert>
 
+    <select id="findByTxnNo" resultType="com.wysjwxm.domain.transfer.TransferLog">
+        SELECT id, txn_no, request_no, from_user_id, to_user_id,
+               amount, currency, status, remark, create_time, update_time
+        FROM transfer_log
+        WHERE txn_no = #{txnNo}
+    </select>
+
+    <select id="findByRequestNo" resultType="com.wysjwxm.domain.transfer.TransferLog">
+        SELECT id, txn_no, request_no, from_user_id, to_user_id,
+               amount, currency, status, remark, create_time, update_time
+        FROM transfer_log
+        WHERE request_no = #{requestNo}
+    </select>
+
+    <update id="updateStatus">
+        UPDATE transfer_log
+        SET status      = #{status.code},
+            remark      = #{remark},
+            update_time = CURRENT_TIMESTAMP
+        WHERE txn_no = #{txnNo}
+    </update>
+
 </mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wysjwxm.infrastructure.persistence.mybatis.TransferBranchMapper">
+
+    <insert id="insert" parameterType="com.wysjwxm.domain.transfer.TransferBranch"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tcc_branch (txn_no, user_id, role, amount, status)
+        VALUES (#{txnNo}, #{userId}, #{role.name}, #{amount}, #{status.name})
+    </insert>
+
+    <select id="findByTxnNo" resultType="com.wysjwxm.domain.transfer.TransferBranch">
+        SELECT id, txn_no, user_id, role, amount, status, create_time, update_time
+        FROM tcc_branch
+        WHERE txn_no = #{txnNo}
+    </select>
+
+    <update id="confirmIfTryed">
+        UPDATE tcc_branch
+        SET status      = 'CONFIRMED',
+            update_time = CURRENT_TIMESTAMP
+        WHERE txn_no = #{txnNo}
+          AND status = 'TRYED'
+    </update>
+
+    <update id="cancelIfTryed">
+        UPDATE tcc_branch
+        SET status      = 'CANCELLED',
+            update_time = CURRENT_TIMESTAMP
+        WHERE txn_no = #{txnNo}
+          AND status = 'TRYED'
+    </update>
+
+</mapper>

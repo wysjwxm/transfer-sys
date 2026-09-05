@@ -4,22 +4,23 @@
 <mapper namespace="com.wysjwxm.infrastructure.persistence.mybatis.AccountMapper">
 
     <select id="findByIdForUpdate" resultType="com.wysjwxm.domain.account.Account">
-        SELECT user_id, balance
+        SELECT user_id, balance, frozen_amount
         FROM account
         WHERE user_id = #{userId}
         FOR UPDATE
     </select>
 
     <select id="findById" resultType="com.wysjwxm.domain.account.Account">
-        SELECT user_id, balance
+        SELECT user_id, balance, frozen_amount
         FROM account
         WHERE user_id = #{userId}
     </select>
 
-    <update id="updateBalance">
+    <update id="update">
         UPDATE account
-        SET balance     = #{balance},
-            update_time = CURRENT_TIMESTAMP
+        SET balance       = #{balance},
+            frozen_amount = #{frozenAmount},
+            update_time   = CURRENT_TIMESTAMP
         WHERE user_id = #{userId}
     </update>
 

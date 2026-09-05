@@ -28,7 +28,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public void updateBalance(Account account) {
-        accountMapper.updateBalance(account);
+    public void update(Account account) {
+        accountMapper.update(account);
     }
 }

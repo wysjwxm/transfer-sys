@@ -14,6 +14,6 @@ public interface AccountMapper {
     /** 按用户 id 查询（无锁）。 */
     Account findById(@Param("userId") Long userId);
 
-    /** 更新余额。 */
-    int updateBalance(Account account);
+    /** 更新账户余额与冻结金额。 */
+    int update(Account account);
 }

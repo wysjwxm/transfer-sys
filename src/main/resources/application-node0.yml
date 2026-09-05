@@ -1,0 +1,19 @@
+# 节点 0：拥有 userId % 2 == 0 的账户（种子 user 2、4）。
+# 这是"收款侧"也可作为同片转出的节点；对外 API 需打到账户所在节点。
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/node0/transfer-sys;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  sql:
+    init:
+      data-locations: classpath:data-node0.sql
+
+# 节点身份与对端地址：shardOf(userId) = userId % 2，本节点持有 == node-id 的账户
+transfer:
+  node-id: 0
+  peer-url: http://localhost:8081
+
+server:
+  port: 8080

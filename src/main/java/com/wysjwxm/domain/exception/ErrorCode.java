@@ -14,7 +14,8 @@ public enum ErrorCode {
     INSUFFICIENT_BALANCE(1002, "余额不足"),
     INVALID_AMOUNT(1003, "转账金额必须大于 0"),
     SAME_ACCOUNT(1004, "不能转账给自己"),
-    INVALID_REQUEST(1005, "请求参数非法");
+    INVALID_REQUEST(1005, "请求参数非法"),
+    WRONG_NODE(1006, "请到账户所在节点发起/查询");
 
     private final int code;
     private final String message;
@@ -22,5 +23,15 @@ public enum ErrorCode {
     ErrorCode(int code, String message) {
         this.code = code;
         this.message = message;
+    }
+
+    /** 按错误码反查枚举；未知码归为系统错误（用于把对端返回的 code 还原为可抛的 BizException）。 */
+    public static ErrorCode fromCode(int code) {
+        for (ErrorCode value : values()) {
+            if (value.code == code) {
+                return value;
+            }
+        }
+        return SYSTEM_ERROR;
     }
 }

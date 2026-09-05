@@ -8,11 +8,11 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 转账流水（一笔行内转账，整笔一行）。
+ * 转账流水：整笔转账的业务记录 + 跨片 TCC 的协调记录（双实例版）。
  *
- * <p>它是转账的业务记录而非纯日志：后续承担状态流转、查询、冲正/对账锚点等职能。
- * txn_no 为全局唯一业务单号。与"动作"概念的 {@link TransferService} 区分：
- * TransferLog 记录这笔转账本身，TransferService 负责执行转账规则。</p>
+ * <p>由发起方（转出方所在）节点写入并驱动状态：受理即落一行 TRYING，终态 SUCCESS / FAILED / CANCELLED
+ * （或确认阶段网络不确定的 CONFIRMING，留给下期恢复/对账）。失败也会留痕（推翻旧 M0.3"成功才落库"），
+ * 因为分布式下需要审计没完成的事。</p>
  */
 @Getter
 @Setter
@@ -27,8 +27,12 @@ public class TransferLog {
     private BigDecimal amount;
     private String currency;
     private TransferLogStatus status;
+    /** 终态原因（错误码/描述），供审计与对账。 */
+    private String remark;
     private LocalDateTime createTime;
+    private LocalDateTime updateTime;
 
+    /** 受理即记：默认状态 TRYING，之后由协调者驱动到终态。 */
     public TransferLog(String txnNo, String requestNo, Long fromUserId, Long toUserId,
                        BigDecimal amount, String currency) {
         this.txnNo = txnNo;
@@ -37,6 +41,6 @@ public class TransferLog {
         this.toUserId = toUserId;
         this.amount = amount;
         this.currency = currency;
-        this.status = TransferLogStatus.SUCCESS;
+        this.status = TransferLogStatus.TRYING;
     }
 }

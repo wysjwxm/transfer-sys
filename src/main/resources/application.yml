@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: transfer-sys
+
+  # dev 默认：H2 内嵌库（MySQL 兼容模式），无需外部依赖即可启动
+  # 切换真 MySQL：启用 mysql profile，并恢复 pom 中被注释的 mysql-connector-java
+  datasource:
+    url: jdbc:h2:file:./data/transfer-sys;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+
+  # H2 控制台（浏览器访问 /h2-console）
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  # 启动即执行建表与种子数据；两表 SQL 均为 H2/MySQL 通用子集
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.wysjwxm.domain.account,com.wysjwxm.domain.transfer
+  configuration:
+    map-underscore-to-camel-case: true
+
+server:
+  port: 8080

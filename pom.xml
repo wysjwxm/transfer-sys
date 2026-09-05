@@ -4,14 +4,74 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.18</version>
+        <relativePath/>
+    </parent>
+
     <groupId>com.wysjwxm</groupId>
     <artifactId>transfer-sys</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>transfer-sys</name>
+    <description>转账系统</description>
 
+    <!-- 本机 JDK 为 Java 8，Spring Boot 2.7 是支持 Java 8 的最后一个大版本 -->
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <!-- Web：REST 接口 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- MyBatis：手写 SQL 的半自动 ORM -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+
+        <!-- H2：内嵌数据库，MySQL 兼容模式，用于无 MySQL 环境的本地开发 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- MySQL 驱动：仅切换到 mysql profile（真实环境）时使用，缺失不影响启动 -->
+<!--        <dependency>-->
+<!--            <groupId>mysql</groupId>-->
+<!--            <artifactId>mysql-connector-java</artifactId>-->
+<!--            <scope>runtime</scope>-->
+<!--        </dependency>-->
+
+        <!-- Lombok：编译期生成 getter/setter/构造器等样板代码 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

@@ -38,3 +38,8 @@ build/
 ### Mac OS ###
 .DS_Store
 /.idea/
+
+### H2 内嵌库数据文件（本地运行时生成）###
+/data/
+/.mcp.json
+/src/main/resources/TODO.md

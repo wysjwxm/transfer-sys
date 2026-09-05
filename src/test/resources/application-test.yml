@@ -1,0 +1,13 @@
+# 测试 profile：只覆盖数据源为内存库，其余（mybatis.mapper-locations、sql.init、
+# logging 等）继承 src/main/resources/application.yml。
+# 注意：这是 profile 文档，会与主配置合并——若放在同名的 application.yml 里则会整个
+# 遮蔽主配置，导致 mybatis.mapper-locations 丢失、XML 不被加载（BindingException 根因）。
+spring:
+  datasource:
+    url: jdbc:h2:mem:transfer_test;MODE=MySQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  h2:
+    console:
+      enabled: false

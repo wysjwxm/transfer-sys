@@ -29,5 +29,13 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
 
+# 日志收敛：默认只留 WARN 以上，只看自己代码 + MyBatis 生成的 SQL。
+# SQL 由 MyBatis 打在"mapper 命名空间"这个 logger 上（前缀即 com.wysjwxm），DEBUG 即见
+# ==> Preparing / ==> Parameters / <== Total 等；想看结果集行，再单独把该包调到 TRACE。
+logging:
+  level:
+    root: info
+    com.wysjwxm: DEBUG
+
 server:
   port: 8080

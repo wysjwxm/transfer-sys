@@ -4,8 +4,8 @@ import com.wysjwxm.domain.account.Account;
 import com.wysjwxm.domain.exception.BizException;
 import com.wysjwxm.domain.exception.ErrorCode;
 import com.wysjwxm.domain.repository.AccountRepository;
-import com.wysjwxm.domain.repository.TransferRepository;
-import com.wysjwxm.domain.transfer.Transfer;
+import com.wysjwxm.domain.repository.TransferLogRepository;
+import com.wysjwxm.domain.transfer.TransferLog;
 import com.wysjwxm.domain.transfer.TransferService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +20,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * <p>要点（呼应设计决策）：
  * <ul>
- *   <li>事务边界在这里：扣 A + 加 B + 写转账记录在同一个数据库事务内，强一致（TODO M0.2）。</li>
+ *   <li>事务边界在这里：扣 A + 加 B + 写转账流水在同一个数据库事务内，强一致（TODO M0.2）。</li>
  *   <li>行锁：两个账户按 user_id 升序加锁（SELECT ... FOR UPDATE），避免并发互转死锁。</li>
  *   <li>规则判定交给领域服务 {@link TransferService} 与聚合 {@link Account}。</li>
  * </ul>
@@ -32,14 +32,14 @@ public class TransferAppService {
     private static final DateTimeFormatter TXN_TIME = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
 
     private final AccountRepository accountRepository;
-    private final TransferRepository transferRepository;
+    private final TransferLogRepository transferLogRepository;
     private final TransferService transferService;
 
     public TransferAppService(AccountRepository accountRepository,
-                              TransferRepository transferRepository,
+                              TransferLogRepository transferLogRepository,
                               TransferService transferService) {
         this.accountRepository = accountRepository;
-        this.transferRepository = transferRepository;
+        this.transferLogRepository = transferLogRepository;
         this.transferService = transferService;
     }
 
@@ -71,11 +71,11 @@ public class TransferAppService {
         accountRepository.updateBalance(from);
         accountRepository.updateBalance(to);
 
-        Transfer transfer = new Transfer(generateTxnNo(), command.getRequestNo(),
+        TransferLog transferLog = new TransferLog(generateTxnNo(), command.getRequestNo(),
                 fromId, toId, command.getAmount(), CURRENCY_CNY);
-        transferRepository.insert(transfer);
+        transferLogRepository.insert(transferLog);
 
-        return new TransferResult(transfer.getTxnNo());
+        return new TransferResult(transferLog.getTxnNo());
     }
 
     /** 查询账户（只读）。 */
